@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"../config"
+	"fmt"
 )
 
 var httpProxyURL string = ""
@@ -28,13 +29,18 @@ func SetUpHTTPProxy(proxyURL string) (){
 func HttpGetRequest(strUrl string, mapParams map[string]string) string {
 	var httpClient *http.Client;
 	if len(httpProxyURL) == 0 {
-		httpClient = &http.Client{}
+		httpClient = &http.Client{
+			Timeout: time.Duration(5 * time.Second),
+		}
 	} else {
 		proxy := func(_ *http.Request) (*url.URL, error) {
 			return url.Parse(httpProxyURL)
 		}
 		transport := &http.Transport{Proxy: proxy}
-		httpClient = &http.Client{Transport: transport}
+		httpClient = &http.Client{
+			Transport: transport,
+			Timeout: time.Duration(5 * time.Second),
+		}
 	}
 
 	var strRequestUrl string
@@ -54,15 +60,16 @@ func HttpGetRequest(strUrl string, mapParams map[string]string) string {
 
 	// 发出请求
 	response, err := httpClient.Do(request)
-	defer response.Body.Close()
-	if nil != err {
-		return err.Error()
+	if err != nil {
+		fmt.Println(err.Error())
+		return ""
 	}
-
+	defer response.Body.Close()
 	// 解析响应内容
 	body, err := ioutil.ReadAll(response.Body)
-	if nil != err {
-		return err.Error()
+	if err != nil {
+		fmt.Println(err.Error())
+		return ""
 	}
 
 	return string(body)
