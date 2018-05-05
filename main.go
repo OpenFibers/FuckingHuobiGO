@@ -7,6 +7,6 @@ import (
 
 func main() {
 	fmt.Println("火币")
-	r := services.GetKLine("btcusdt", "1min", 50)
-	fmt.Println(r)
+	fmt.Println(services.GetSymbols())
+	fmt.Println(services.GetKLine("btcusdt", "15min", 1))
 }
