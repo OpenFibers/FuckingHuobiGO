@@ -15,18 +15,27 @@ import (
 	"../config"
 )
 
+var httpProxyURL string = ""
+
+func SetUpHTTPProxy(proxyURL string) (){
+	httpProxyURL = proxyURL
+}
+
 // Http Get请求基础函数, 通过封装Go语言Http请求, 支持火币网REST API的HTTP Get请求
 // strUrl: 请求的URL
 // strParams: string类型的请求参数, user=lxz&pwd=lxz
 // return: 请求结果
 func HttpGetRequest(strUrl string, mapParams map[string]string) string {
-	proxy := func(_ *http.Request) (*url.URL, error) {
-		return url.Parse("http://127.0.0.1:6152")
+	var httpClient *http.Client;
+	if len(httpProxyURL) == 0 {
+		httpClient = &http.Client{}
+	} else {
+		proxy := func(_ *http.Request) (*url.URL, error) {
+			return url.Parse(httpProxyURL)
+		}
+		transport := &http.Transport{Proxy: proxy}
+		httpClient = &http.Client{Transport: transport}
 	}
-	transport := &http.Transport{Proxy: proxy}
-	httpClient := &http.Client{Transport: transport}
-
-	//#httpClient := &http.Client{}
 
 	var strRequestUrl string
 	if nil == mapParams {
