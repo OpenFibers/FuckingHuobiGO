@@ -7,7 +7,7 @@ import (
 
 	"../config"
 	"../models"
-	"../untils"
+	"../httputils"
 )
 
 // 批量操作的API下个版本再封装
@@ -31,7 +31,7 @@ func GetKLine(strSymbol, strPeriod string, nSize int) models.KLineReturn {
 	strRequestUrl := "/market/history/kline"
 	strUrl := config.MARKET_URL + strRequestUrl
 
-	jsonKLineReturn := untils.HttpGetRequest(strUrl, mapParams)
+	jsonKLineReturn := httputils.HttpGetRequest(strUrl, mapParams)
 	json.Unmarshal([]byte(jsonKLineReturn), &kLineReturn)
 
 	return kLineReturn
@@ -49,7 +49,7 @@ func GetTicker(strSymbol string) models.TickerReturn {
 	strRequestUrl := "/market/detail/merged"
 	strUrl := config.MARKET_URL + strRequestUrl
 
-	jsonTickReturn := untils.HttpGetRequest(strUrl, mapParams)
+	jsonTickReturn := httputils.HttpGetRequest(strUrl, mapParams)
 	json.Unmarshal([]byte(jsonTickReturn), &tickerReturn)
 
 	return tickerReturn
@@ -69,7 +69,7 @@ func GetMarketDepth(strSymbol, strType string) models.MarketDepthReturn {
 	strRequestUrl := "/market/depth"
 	strUrl := config.MARKET_URL + strRequestUrl
 
-	jsonMarketDepthReturn := untils.HttpGetRequest(strUrl, mapParams)
+	jsonMarketDepthReturn := httputils.HttpGetRequest(strUrl, mapParams)
 	json.Unmarshal([]byte(jsonMarketDepthReturn), &marketDepthReturn)
 
 	return marketDepthReturn
@@ -87,7 +87,7 @@ func GetTradeDetail(strSymbol string) models.TradeDetailReturn {
 	strRequestUrl := "/market/trade"
 	strUrl := config.MARKET_URL + strRequestUrl
 
-	jsonTradeDetailReturn := untils.HttpGetRequest(strUrl, mapParams)
+	jsonTradeDetailReturn := httputils.HttpGetRequest(strUrl, mapParams)
 	json.Unmarshal([]byte(jsonTradeDetailReturn), &tradeDetailReturn)
 
 	return tradeDetailReturn
@@ -107,7 +107,7 @@ func GetTrade(strSymbol string, nSize int) models.TradeReturn {
 	strRequestUrl := "/market/history/trade"
 	strUrl := config.MARKET_URL + strRequestUrl
 
-	jsonTradeReturn := untils.HttpGetRequest(strUrl, mapParams)
+	jsonTradeReturn := httputils.HttpGetRequest(strUrl, mapParams)
 	json.Unmarshal([]byte(jsonTradeReturn), &tradeReturn)
 
 	return tradeReturn
@@ -125,7 +125,7 @@ func GetMarketDetail(strSymbol string) models.MarketDetailReturn {
 	strRequestUrl := "/market/detail"
 	strUrl := config.MARKET_URL + strRequestUrl
 
-	jsonMarketDetailReturn := untils.HttpGetRequest(strUrl, mapParams)
+	jsonMarketDetailReturn := httputils.HttpGetRequest(strUrl, mapParams)
 	json.Unmarshal([]byte(jsonMarketDetailReturn), &marketDetailReturn)
 
 	return marketDetailReturn
@@ -142,7 +142,7 @@ func GetSymbols() models.SymbolsReturn {
 	strRequestUrl := "/v1/common/symbols"
 	strUrl := config.TRADE_URL + strRequestUrl
 
-	jsonSymbolsReturn := untils.HttpGetRequest(strUrl, nil)
+	jsonSymbolsReturn := httputils.HttpGetRequest(strUrl, nil)
 	json.Unmarshal([]byte(jsonSymbolsReturn), &symbolsReturn)
 
 	return symbolsReturn
@@ -156,7 +156,7 @@ func GetCurrencys() models.CurrencysReturn {
 	strRequestUrl := "/v1/common/currencys"
 	strUrl := config.TRADE_URL + strRequestUrl
 
-	jsonCurrencysReturn := untils.HttpGetRequest(strUrl, nil)
+	jsonCurrencysReturn := httputils.HttpGetRequest(strUrl, nil)
 	json.Unmarshal([]byte(jsonCurrencysReturn), &currencysReturn)
 
 	return currencysReturn
@@ -170,7 +170,7 @@ func GetTimestamp() models.TimestampReturn {
 	strRequest := "/v1/common/timestamp"
 	strUrl := config.TRADE_URL + strRequest
 
-	jsonTimestampReturn := untils.HttpGetRequest(strUrl, nil)
+	jsonTimestampReturn := httputils.HttpGetRequest(strUrl, nil)
 	json.Unmarshal([]byte(jsonTimestampReturn), &timestampReturn)
 
 	return timestampReturn
@@ -185,7 +185,7 @@ func GetAccounts() models.AccountsReturn {
 	accountsReturn := models.AccountsReturn{}
 
 	strRequest := "/v1/account/accounts"
-	jsonAccountsReturn := untils.ApiKeyGet(make(map[string]string), strRequest)
+	jsonAccountsReturn := httputils.ApiKeyGet(make(map[string]string), strRequest)
 	json.Unmarshal([]byte(jsonAccountsReturn), &accountsReturn)
 
 	return accountsReturn
@@ -198,7 +198,7 @@ func GetAccountBalance(strAccountID string) models.BalanceReturn {
 	balanceReturn := models.BalanceReturn{}
 
 	strRequest := fmt.Sprintf("/v1/account/accounts/%s/balance", strAccountID)
-	jsonBanlanceReturn := untils.ApiKeyGet(make(map[string]string), strRequest)
+	jsonBanlanceReturn := httputils.ApiKeyGet(make(map[string]string), strRequest)
 	json.Unmarshal([]byte(jsonBanlanceReturn), &balanceReturn)
 
 	return balanceReturn
@@ -226,7 +226,7 @@ func Place(placeRequestParams models.PlaceRequestParams) models.PlaceReturn {
 	mapParams["type"] = placeRequestParams.Type
 
 	strRequest := "/v1/order/orders/place"
-	jsonPlaceReturn := untils.ApiKeyPost(mapParams, strRequest)
+	jsonPlaceReturn := httputils.ApiKeyPost(mapParams, strRequest)
 	json.Unmarshal([]byte(jsonPlaceReturn), &placeReturn)
 
 	return placeReturn
@@ -239,7 +239,7 @@ func SubmitCancel(strOrderID string) models.PlaceReturn {
 	placeReturn := models.PlaceReturn{}
 
 	strRequest := fmt.Sprintf("/v1/order/orders/%s/submitcancel", strOrderID)
-	jsonPlaceReturn := untils.ApiKeyPost(make(map[string]string), strRequest)
+	jsonPlaceReturn := httputils.ApiKeyPost(make(map[string]string), strRequest)
 	json.Unmarshal([]byte(jsonPlaceReturn), &placeReturn)
 
 	return placeReturn

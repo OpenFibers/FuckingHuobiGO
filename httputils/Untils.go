@@ -1,4 +1,4 @@
-package untils
+package httputils
 
 import (
 	"crypto/hmac"
